@@ -627,6 +627,7 @@ function SectionPage() {
                             width: `${itemPct}%`,
                             background: "var(--gradient-readiness)",
                           }}
+                        />
                       </div>
 
                       {cat.temp && (
