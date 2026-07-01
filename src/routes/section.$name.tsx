@@ -138,12 +138,36 @@ function SectionPage() {
   }, [search.date, search.shift]);
 
   const key = useMemo(() => storageKey(name, shell.date), [name, shell.date]);
+  const tempKey = useMemo(
+    () => `linecheck:temps:${name}:${shell.date}:${shell.shift}`,
+    [name, shell.date, shell.shift],
+  );
   const [state, setState] = useState<SectionState>(() => loadSection(name, shell.date));
   const [editMode, setEditMode] = useState(false);
   const [savedFlash, setSavedFlash] = useState(false);
   const [flaggedOnly, setFlaggedOnly] = useState(false);
+  const [temps, setTemps] = useState<Record<string, string>>({});
   const SHELF_OPTIONS = useOptionList(SHELVES_KEY, "linecheck:shelves-update", DEFAULT_SHELF_OPTIONS);
   const CONTAINER_OPTIONS = useOptionList(CONTAINERS_KEY, "linecheck:containers-update", DEFAULT_CONTAINER_OPTIONS);
+
+  useEffect(() => {
+    try {
+      const raw = lsStore.getItem(tempKey);
+      setTemps(raw ? JSON.parse(raw) : {});
+    } catch {
+      setTemps({});
+    }
+  }, [tempKey]);
+
+  const setTemp = (group: string, value: string) => {
+    setTemps((prev) => {
+      const next = { ...prev, [group]: value };
+      try {
+        lsStore.setItem(tempKey, JSON.stringify(next));
+      } catch {}
+      return next;
+    });
+  };
 
   const defaultStruct = useMemo(
     () => (section ? buildDefaultStruct(section) : []),
