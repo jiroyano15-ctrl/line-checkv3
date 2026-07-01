@@ -627,8 +627,24 @@ function SectionPage() {
                             width: `${itemPct}%`,
                             background: "var(--gradient-readiness)",
                           }}
-                        />
                       </div>
+
+                      {cat.temp && (
+                        <div className="flex items-center gap-1.5">
+                          <Thermometer className="h-3.5 w-3.5 text-sky-500" />
+                          <input
+                            type="number"
+                            inputMode="decimal"
+                            step="0.1"
+                            value={e?.temp ?? ""}
+                            onChange={(ev) => setEntry(item.name, { temp: ev.target.value })}
+                            placeholder="Temp"
+                            aria-label={`${item.name} temperature`}
+                            className="w-16 rounded-md border border-input bg-background px-2 py-1 text-[11px] font-semibold tabular-nums outline-none focus:border-foreground/40"
+                          />
+                          <span className="text-[10px] font-semibold text-muted-foreground">°F</span>
+                        </div>
+                      )}
 
                       <div className="relative">
                         <select
