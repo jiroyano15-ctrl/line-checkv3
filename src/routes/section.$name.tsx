@@ -591,9 +591,21 @@ function SectionPage() {
                   {cat.group}
                 </h3>
                 {cat.temp && (
-                  <span className="inline-flex items-center gap-1 rounded-full border border-border bg-card px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
-                    <Thermometer className="h-3 w-3 text-sky-500" /> Temp
-                  </span>
+                  <div className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
+                    <Thermometer className="h-3 w-3 text-sky-500" />
+                    <label className="uppercase tracking-wide">Temp</label>
+                    <input
+                      type="number"
+                      inputMode="decimal"
+                      step="0.1"
+                      value={temps[cat.group] ?? ""}
+                      onChange={(ev) => setTemp(cat.group, ev.target.value)}
+                      placeholder="—"
+                      aria-label={`${cat.group} temperature reading`}
+                      className="w-14 rounded-md border border-input bg-background px-1.5 py-0.5 text-[11px] font-semibold text-foreground outline-none focus:border-foreground/40"
+                    />
+                    <span>°F</span>
+                  </div>
                 )}
               </div>
 
