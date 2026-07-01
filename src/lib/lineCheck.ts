@@ -3,7 +3,7 @@ import { lsStore, getUserScope } from "@/lib/lsStore";
 
 
 export type Slot = "op" | "mid" | "cl";
-export type Entry = { status: string; note: string };
+export type Entry = { status: string; note: string; temp?: string };
 export type SectionState = {
   date: string;
   opening: string;
