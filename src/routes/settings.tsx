@@ -598,6 +598,7 @@ function IconPicker({ value, onChange }: { value: string; onChange: (v: string) 
 function TeamPanel() {
   const [members, setMembers] = useState<string[]>(() => loadJSON(STAFF_KEY, STAFF));
   const [name, setName] = useState("");
+  const dnd = useDragReorder<string>(setMembers);
 
   useEffect(() => {
     lsStore.setItem(STAFF_KEY, JSON.stringify(members));
@@ -629,12 +630,25 @@ function TeamPanel() {
         </button>
       </div>
 
+      <p className="mb-2 text-xs text-muted-foreground">Drag the handle to reorder.</p>
+
       <ul className="space-y-2">
         {members.map((m, i) => (
           <li
             key={m + i}
-            className="flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3 shadow-sm"
+            {...dnd.dropProps(i)}
+            className={`flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3 shadow-sm transition-opacity ${
+              dnd.dragIdx === i ? "opacity-50" : ""
+            }`}
           >
+            <button
+              type="button"
+              {...dnd.handleProps(i)}
+              aria-label={`Reorder ${m}`}
+              className="grid h-7 w-7 place-items-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground cursor-grab active:cursor-grabbing"
+            >
+              <GripVertical className="h-4 w-4" aria-hidden="true" />
+            </button>
             <Users className="h-4 w-4 text-muted-foreground" />
             <span className="font-semibold tracking-tight">{m}</span>
             <button
@@ -656,6 +670,7 @@ function TeamPanel() {
 function StatusPanel() {
   const [statuses, setStatuses] = useState<string[]>(() => loadJSON(STATUSES_KEY, STATUSES));
   const [name, setName] = useState("");
+  const dnd = useDragReorder<string>(setStatuses);
 
   useEffect(() => {
     lsStore.setItem(STATUSES_KEY, JSON.stringify(statuses));
@@ -686,12 +701,25 @@ function StatusPanel() {
         </button>
       </div>
 
+      <p className="mb-2 text-xs text-muted-foreground">Drag the handle to reorder.</p>
+
       <ul className="space-y-2">
         {statuses.map((s, i) => (
           <li
             key={s + i}
-            className="flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3 shadow-sm"
+            {...dnd.dropProps(i)}
+            className={`flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3 shadow-sm transition-opacity ${
+              dnd.dragIdx === i ? "opacity-50" : ""
+            }`}
           >
+            <button
+              type="button"
+              {...dnd.handleProps(i)}
+              aria-label={`Reorder ${s}`}
+              className="grid h-7 w-7 place-items-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground cursor-grab active:cursor-grabbing"
+            >
+              <GripVertical className="h-4 w-4" aria-hidden="true" />
+            </button>
             <Tag className="h-4 w-4 text-muted-foreground" />
             <span className="font-semibold tracking-tight">{s}</span>
             <button
@@ -725,6 +753,7 @@ function SimpleListPanel({
 }) {
   const [items, setItems] = useState<string[]>(() => loadJSON(storageKey, defaults));
   const [name, setName] = useState("");
+  const dnd = useDragReorder<string>(setItems);
 
   useEffect(() => {
     lsStore.setItem(storageKey, JSON.stringify(items));
@@ -762,12 +791,25 @@ function SimpleListPanel({
         </button>
       </div>
 
+      <p className="mb-2 text-xs text-muted-foreground">Drag the handle to reorder.</p>
+
       <ul className="space-y-2">
         {items.map((v, i) => (
           <li
             key={v + i}
-            className="flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3 shadow-sm"
+            {...dnd.dropProps(i)}
+            className={`flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3 shadow-sm transition-opacity ${
+              dnd.dragIdx === i ? "opacity-50" : ""
+            }`}
           >
+            <button
+              type="button"
+              {...dnd.handleProps(i)}
+              aria-label={`Reorder ${v}`}
+              className="grid h-7 w-7 place-items-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground cursor-grab active:cursor-grabbing"
+            >
+              <GripVertical className="h-4 w-4" aria-hidden="true" />
+            </button>
             {icon}
             <span className="font-semibold tracking-tight">{v}</span>
             <button
@@ -783,3 +825,4 @@ function SimpleListPanel({
     </div>
   );
 }
+
