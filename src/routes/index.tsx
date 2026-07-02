@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
+import { lsStore } from "@/lib/lsStore";
 import { AppShell, useShellState, SECTION_ICONS } from "@/components/AppShell";
 import {
   SECTIONS,
@@ -56,9 +57,11 @@ function Dashboard() {
     const fn = () => setTick((t) => t + 1);
     window.addEventListener("storage", fn);
     window.addEventListener("linecheck:update", fn);
+    window.addEventListener("linecheck:stations-update", fn);
     return () => {
       window.removeEventListener("storage", fn);
       window.removeEventListener("linecheck:update", fn);
+      window.removeEventListener("linecheck:stations-update", fn);
     };
   }, []);
 
@@ -75,6 +78,19 @@ function Dashboard() {
       if (total > 0 && done === total) stationsComplete++;
       perStation.push({ name: s.name, done, total, pct });
     }
+    // Apply user-defined station order from Settings
+    try {
+      const raw = lsStore.getItem("linecheck:settings:stations");
+      if (raw) {
+        const saved = JSON.parse(raw) as { name: string }[];
+        const order = new Map(saved.map((s, i) => [s.name, i]));
+        perStation.sort((a, b) => {
+          const ai = order.has(a.name) ? (order.get(a.name) as number) : Number.MAX_SAFE_INTEGER;
+          const bi = order.has(b.name) ? (order.get(b.name) as number) : Number.MAX_SAFE_INTEGER;
+          return ai - bi;
+        });
+      }
+    } catch {}
     const flagged: FlaggedRow[] = allFlagged(shell.shift, shell.date);
     const readiness = totalItems ? Math.round((checkedItems / totalItems) * 100) : 0;
     return {

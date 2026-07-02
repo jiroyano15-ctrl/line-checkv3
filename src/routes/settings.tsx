@@ -329,6 +329,7 @@ function StationsPanel() {
 
   useEffect(() => {
     lsStore.setItem(STATIONS_KEY, JSON.stringify(stations));
+    window.dispatchEvent(new Event("linecheck:stations-update"));
   }, [stations]);
 
   const add = () => {
